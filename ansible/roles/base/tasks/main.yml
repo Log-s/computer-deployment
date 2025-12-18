@@ -1,0 +1,60 @@
+---
+# Main task file for base role
+# Includes all sub-task files
+
+- name: Setup VS Code apt repository
+  include_tasks: vscode_repo.yml
+
+- name: Setup Bruno apt repository
+  include_tasks: bruno_repo.yml
+
+- name: Include apt packages installation
+  include_tasks: apt_packages.yml
+
+- name: Install WPScan (Ruby gem)
+  include_tasks: wpscan_setup.yml
+
+- name: Install logo-ls (.deb)
+  include_tasks: logo_ls.yml
+
+- name: Include sudo setup
+  include_tasks: sudo_setup.yml
+
+- name: Include Docker and Podman setup
+  include_tasks: docker_setup.yml
+
+- name: Include pipx packages installation
+  include_tasks: pipx_packages.yml
+
+- name: Clean up default home directories
+  include_tasks: cleanup_home.yml
+
+- name: Deploy zshrc configuration before setting zsh as default shell
+  copy:
+    src: "{{ configs_dir }}/zsh/zshrc"
+    dest: "{{ user_home }}/.zshrc"
+    mode: '0644'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    remote_src: false
+  become: yes
+  ignore_errors: yes
+
+- name: Include shell setup (zsh, oh-my-zsh)
+  include_tasks: shell_setup.yml
+
+- name: Install Rust toolchain (rustup) for target user
+  include_tasks: rust_setup.yml
+
+- name: Include source installations
+  include_tasks: source_installs.yml
+
+- name: Generate SSH keypair for target user
+  include_tasks: ssh_setup.yml
+
+- name: Setup tmux plugin manager (TPM)
+  include_tasks: tmux_setup.yml
+
+- name: Include configuration deployment (other configs)
+  include_tasks: configs.yml
+

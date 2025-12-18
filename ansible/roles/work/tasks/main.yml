@@ -1,0 +1,83 @@
+---
+# Main task file for work role
+# Extends base role with work-specific additions
+
+- name: Include base role
+  include_role:
+    name: base
+
+- name: Add Xpra repository (required on Debian 13)
+  include_tasks: xpra_repo.yml
+
+- name: Update apt cache for work packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: Install work APT packages
+  apt:
+    name: "{{ work_apt_packages }}"
+    state: present
+  become: yes
+  when: work_apt_packages | length > 0
+
+- name: Install and enable xpra user service (optional)
+  include_tasks: xpra_service.yml
+
+- name: Fix X11 bug (Debian)
+  replace:
+    path: /etc/X11/Xsession.d/20x11-common_process-args
+    regexp: 'command -v'
+    replace: '/usr/bin/which'
+  become: yes
+  when: ansible_os_family == "Debian"
+  ignore_errors: yes
+
+- name: Install work pipx packages
+  command: "pipx install {{ item }}"
+  args:
+    creates: "{{ user_home }}/.local/bin/{{ item.split('==')[0].split('@')[0] }}"
+  loop: "{{ work_pipx_packages }}"
+  when: work_pipx_packages | length > 0
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+
+- name: Ensure category directory exists for work source installations
+  file:
+    path: "{{ user_home }}/Tools/{{ item.category }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ work_source_installs }}"
+  when: work_source_installs | length > 0
+
+- name: Clone work source installations
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
+    update: yes
+  loop: "{{ work_source_installs }}"
+  when: work_source_installs | length > 0
+
+- name: Build and install work source installations
+  shell: "{{ item.build_commands | join(' && ') }}"
+  args:
+    chdir: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
+  loop: "{{ work_source_installs }}"
+  when: 
+    - work_source_installs | length > 0
+    - item.build_commands is defined
+    - item.build_commands | length > 0
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+
+- name: Deploy work configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+    remote_src: false
+  loop: "{{ work_configs }}"
+  when: work_configs | length > 0
+  ignore_errors: yes
+

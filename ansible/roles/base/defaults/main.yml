@@ -1,0 +1,86 @@
+---
+# Base role default variables
+
+# APT packages to install
+base_apt_packages:
+  - git
+  - gpg
+  - curl
+  - wget
+  - zip
+  - tcpdump
+  - vim
+  - firefox-esr
+  - tmux
+  - zsh
+  - openssh-client
+  - golang
+  - build-essential
+  - ruby-full
+  - ruby-rubygems
+  - python3
+  - python3-pip
+  - python3-venv
+  - python3-full
+  - pipx
+  - fzf
+  - wireshark
+  - net-tools
+  - sudo
+  - docker.io
+  - podman
+  - terminator
+  - sqlmap
+  - hashcat
+  - apt-transport-https
+  - code
+  - bruno
+
+# pipx packages to install
+base_pipx_packages:
+  - impacket
+  - git+https://github.com/lgandx/Responder.git
+  - mitmproxy
+  - updog
+
+# Source installations (list of dicts with repo, category, name, and build_commands)
+# Tools will be installed in ~/Tools/{category}/{name}
+# Example:
+# base_source_installs:
+#   - repo: "https://github.com/user/tool.git"
+#     category: "network"
+#     name: "tool"
+#     build_commands:
+#       - "make install"
+base_source_installs:
+  - repo: "https://github.com/dirkjanm/krbrelayx.git"
+    category: "ad"
+    name: "krbrelayx"
+  - repo: "https://github.com/lgandx/Responder.git"
+    category: "ad"
+    name: "Responder"
+  - repo: "https://github.com/lakinduakash/linux-wifi-hotspot"
+    category: "network"
+    name: "linux-wifi-hotspot"
+    build_commands:
+      - "cd src/scripts"
+      - "make install"
+  - repo: "https://github.com/semgrep/semgrep-rules.git"
+    category: "code"
+    name: "semgrep-rules"
+  - repo: "https://github.com/danielmiessler/SecLists.git"
+    category: "web"
+    name: "SecLists"
+
+# Configuration files to deploy
+base_configs:
+  - name: tmux
+    src: "{{ configs_dir }}/tmux/tmux.conf"
+    dest: "{{ user_home }}/.tmux.conf"
+  - name: zshrc
+    src: "{{ configs_dir }}/zsh/zshrc"
+    dest: "{{ user_home }}/.zshrc"
+  - name: terminator
+    src: "{{ configs_dir }}/terminator/config"
+    dest: "{{ user_home }}/.config/terminator/config"
+

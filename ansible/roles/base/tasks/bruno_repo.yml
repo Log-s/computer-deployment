@@ -1,0 +1,65 @@
+---
+# Bruno apt repository (Debian) + keyring
+
+- name: Ensure /etc/apt/keyrings exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Disable existing Bruno source if present (to avoid apt update failures during bootstrap)
+  shell: |
+    set -e
+    for f in /etc/apt/sources.list.d/bruno.list /etc/apt/sources.list.d/bruno.sources; do
+      if [ -f "$f" ]; then
+        mv "$f" "${f}.disabled"
+      fi
+    done
+  args:
+    executable: /bin/bash
+  become: yes
+
+- name: Ensure prerequisites for Bruno key install (curl, gpg)
+  apt:
+    name:
+      - curl
+      - gpg
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install Bruno repository keyring
+  shell: |
+    set -euo pipefail
+    # Install both the documented Bruno key and the key currently required by apt on Debian 13.
+    # (apt error: Missing key B5686F65CAA08C49040D6E3F56333D3B745C1FEC)
+    tmp="$(mktemp)"
+    curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x9FA6017ECABE0266" >> "$tmp"
+    curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB5686F65CAA08C49040D6E3F56333D3B745C1FEC" >> "$tmp"
+    gpg --dearmor < "$tmp" | tee /etc/apt/keyrings/bruno.gpg > /dev/null
+    rm -f "$tmp"
+  args:
+    creates: /etc/apt/keyrings/bruno.gpg
+  become: yes
+
+- name: Ensure permissions on Bruno keyring
+  file:
+    path: /etc/apt/keyrings/bruno.gpg
+    mode: '0644'
+  become: yes
+
+- name: Add Bruno apt repository
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/bruno.gpg] http://debian.usebruno.com/ bruno stable"
+    state: present
+    filename: bruno
+    update_cache: no
+  become: yes
+
+- name: Update apt cache after adding Bruno repository
+  apt:
+    update_cache: yes
+  become: yes
+
+

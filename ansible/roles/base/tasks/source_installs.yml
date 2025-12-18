@@ -1,0 +1,38 @@
+---
+# Install tools from source
+
+- name: Ensure Tools directory exists
+  file:
+    path: "{{ user_home }}/Tools"
+    state: directory
+    mode: '0755'
+
+- name: Ensure category directory exists for source installations
+  file:
+    path: "{{ user_home }}/Tools/{{ item.category }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ base_source_installs }}"
+  when: base_source_installs | length > 0
+
+- name: Clone repository from source
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
+    update: yes
+  loop: "{{ base_source_installs }}"
+  when: base_source_installs | length > 0
+  register: git_clone_result
+
+- name: Build and install from source
+  shell: "{{ item.build_commands | join(' && ') }}"
+  args:
+    chdir: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
+  loop: "{{ base_source_installs }}"
+  when: 
+    - base_source_installs | length > 0
+    - item.build_commands is defined
+    - item.build_commands | length > 0
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+

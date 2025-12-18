@@ -1,0 +1,16 @@
+---
+# Remove default XDG user directories from target user's home
+
+- name: Remove default home subdirectories (Desktop, Music, Templates, Public, Videos)
+  file:
+    path: "{{ user_home }}/{{ item }}"
+    state: absent
+  loop:
+    - Desktop
+    - Music
+    - Templates
+    - Public
+    - Videos
+  become: yes
+
+

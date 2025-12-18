@@ -1,0 +1,11 @@
+---
+# Install WPScan via RubyGems for the target user
+
+- name: Install wpscan (gem --user-install)
+  command: gem install --user-install wpscan
+  environment:
+    HOME: "{{ user_home }}"
+  become: yes
+  become_user: "{{ user_name }}"
+
+

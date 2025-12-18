@@ -1,0 +1,42 @@
+---
+# Add Xpra repository + pinning for Debian trixie so apt can install xpra
+
+- name: Ensure keyrings directory exists
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Download and install Xpra apt keyring
+  shell: |
+    wget -qO - {{ xpra_key_url }} | gpg --dearmor | sudo tee {{ xpra_keyring_path }} > /dev/null
+  args:
+    creates: "{{ xpra_keyring_path }}"
+  become: yes
+
+- name: Add Xpra apt repository
+  apt_repository:
+    repo: "deb [signed-by={{ xpra_keyring_path }}] {{ xpra_repo_url }} {{ xpra_suite }} {{ xpra_components | join(' ') }}"
+    state: present
+    filename: xpra
+    update_cache: yes
+  become: yes
+
+- name: Pin Xpra packages to prefer xpra.org (v6.*)
+  copy:
+    dest: /etc/apt/preferences.d/xpra
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      Package: xpra xpra-x11 xpra-server xpra-client xpra-client-gtk3 xpra-codecs xpra-common
+      Pin: origin xpra.org
+      Pin-Priority: 999
+
+      Package: *
+      Pin: origin xpra.org
+      Pin-Priority: 1
+  become: yes
+
+

@@ -1,0 +1,24 @@
+---
+# Generate SSH keypair for the target user (ed25519, no passphrase)
+
+- name: Ensure ~/.ssh directory exists
+  file:
+    path: "{{ user_home }}/.ssh"
+    state: directory
+    mode: '0700'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  become: yes
+
+- name: Generate ed25519 SSH keypair (no passphrase)
+  community.crypto.openssh_keypair:
+    path: "{{ user_home }}/.ssh/id_ed25519"
+    type: ed25519
+    comment: "{{ user_name }}@{{ ansible_hostname | default('localhost') }}"
+    force: false
+    mode: '0600'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  become: yes
+
+

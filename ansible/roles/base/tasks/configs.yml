@@ -1,0 +1,46 @@
+---
+# Deploy configuration files
+
+- name: Ensure config directories exist
+  file:
+    path: "{{ item.dest | dirname }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  loop: "{{ base_configs }}"
+  when: base_configs | length > 0
+  become: yes
+  loop_control:
+    label: "{{ item.name }} directory"
+
+- name: Deploy configuration files (excluding zshrc, already deployed)
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    remote_src: false
+  loop: "{{ base_configs }}"
+  when: 
+    - base_configs | length > 0
+    - item.name != 'zshrc'  # zshrc is deployed earlier before shell setup
+  register: config_result
+  ignore_errors: yes
+  become: yes
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Report configuration deployment status
+  debug:
+    msg: "Deployed {{ item.item.name }} to {{ item.item.dest }}"
+  loop: "{{ config_result.results | default([]) }}"
+  when: 
+    - base_configs | length > 0
+    - config_result is defined
+    - config_result.results is defined
+    - config_result.results is iterable
+    - item.failed is not defined or not item.failed
+    - item.changed is defined and item.changed
+

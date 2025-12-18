@@ -1,0 +1,31 @@
+---
+# Install logo-ls from release .deb
+
+- name: Check if logo-ls is already installed
+  stat:
+    path: /usr/bin/logo-ls
+  register: logo_ls_stat
+
+- name: Download logo-ls .deb
+  get_url:
+    url: https://github.com/Yash-Handa/logo-ls/releases/download/v1.3.7/logo-ls_amd64.deb
+    dest: /tmp/logo-ls_amd64.deb
+    mode: '0644'
+  become: yes
+  when: not logo_ls_stat.stat.exists
+
+- name: Install logo-ls .deb
+  apt:
+    deb: /tmp/logo-ls_amd64.deb
+    state: present
+  become: yes
+  when: not logo_ls_stat.stat.exists
+
+- name: Remove logo-ls .deb
+  file:
+    path: /tmp/logo-ls_amd64.deb
+    state: absent
+  become: yes
+  when: not logo_ls_stat.stat.exists
+
+

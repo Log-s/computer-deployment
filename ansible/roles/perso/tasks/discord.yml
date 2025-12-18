@@ -1,0 +1,38 @@
+---
+# Install Discord from .deb package
+
+- name: Download Discord .deb package
+  get_url:
+    url: https://discord.com/api/download?platform=linux
+    dest: /tmp/discord.deb
+    mode: '0644'
+  become: yes
+
+- name: Install Discord .deb package
+  apt:
+    deb: /tmp/discord.deb
+    state: present
+  become: yes
+  ignore_errors: yes
+  register: discord_install
+
+- name: Fix Discord dependencies if needed
+  apt:
+    update_cache: yes
+    fix_broken: yes
+  become: yes
+  when: discord_install.failed
+
+- name: Install Discord .deb package (retry after fixing dependencies)
+  apt:
+    deb: /tmp/discord.deb
+    state: present
+  become: yes
+  when: discord_install.failed
+
+- name: Remove Discord .deb package
+  file:
+    path: /tmp/discord.deb
+    state: absent
+  become: yes
+

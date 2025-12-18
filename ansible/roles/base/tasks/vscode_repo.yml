@@ -1,0 +1,68 @@
+---
+# Install VS Code repository (Debian deb822 .sources format) + keyring
+
+- name: Ensure /etc/apt/keyrings exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Disable existing VS Code sources if present (to avoid apt update failures before key install)
+  shell: |
+    set -e
+    # Also disable other third-party sources that may currently be broken and block apt update (ex: bruno)
+    for f in \
+      /etc/apt/sources.list.d/vscode.sources \
+      /etc/apt/sources.list.d/vscode.list \
+      /etc/apt/sources.list.d/bruno.list \
+      /etc/apt/sources.list.d/bruno.sources \
+    ; do
+      if [ -f "$f" ]; then
+        mv "$f" "${f}.disabled"
+      fi
+    done
+  args:
+    executable: /bin/bash
+  become: yes
+
+- name: Ensure prerequisites for Microsoft key install (wget, gpg)
+  apt:
+    name:
+      - wget
+      - gpg
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install Microsoft apt keyring (for VS Code repo)
+  shell: |
+    set -euo pipefail
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+    chmod 644 /etc/apt/keyrings/microsoft.gpg
+  args:
+    executable: /bin/bash
+    creates: /etc/apt/keyrings/microsoft.gpg
+  become: yes
+
+- name: Install VS Code deb822 sources file
+  copy:
+    dest: /etc/apt/sources.list.d/vscode.sources
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      Types: deb
+      URIs: https://packages.microsoft.com/repos/code
+      Suites: stable
+      Components: main
+      Architectures: amd64 arm64 armhf
+      Signed-By: /etc/apt/keyrings/microsoft.gpg
+  become: yes
+
+- name: Update apt cache after adding VS Code repository
+  apt:
+    update_cache: yes
+  become: yes
+
+

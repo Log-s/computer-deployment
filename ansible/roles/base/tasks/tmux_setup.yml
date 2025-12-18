@@ -1,0 +1,20 @@
+---
+# Setup tmux plugin manager (TPM)
+
+- name: Ensure .tmux directory exists
+  file:
+    path: "{{ user_home }}/.tmux"
+    state: directory
+    mode: '0755'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  become: yes
+
+- name: Install tmux plugin manager (TPM)
+  git:
+    repo: https://github.com/tmux-plugins/tpm.git
+    dest: "{{ user_home }}/.tmux/plugins/tpm"
+    update: yes
+  become: yes
+  become_user: "{{ user_name }}"
+

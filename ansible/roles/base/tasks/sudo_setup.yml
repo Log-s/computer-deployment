@@ -1,0 +1,24 @@
+---
+# Configure sudo for the user
+
+- name: Ensure sudo group exists
+  group:
+    name: sudo
+    state: present
+  become: yes
+
+- name: Ensure wireshark group exists
+  group:
+    name: wireshark
+    state: present
+  become: yes
+
+- name: Add user to sudo group
+  user:
+    name: "{{ user_name }}"
+    groups:
+      - sudo
+      - wireshark
+    append: yes
+  become: yes
+

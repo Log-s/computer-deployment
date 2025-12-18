@@ -1,0 +1,58 @@
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Ensure pipx-installed apps are on PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Ensure rustup/cargo-installed apps are on PATH
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Ensure RubyGems user-install bin directory is on PATH (for tools like wpscan)
+if command -v ruby >/dev/null 2>&1; then
+  GEM_USER_DIR="$(ruby -e 'print Gem.user_dir' 2>/dev/null)"
+  if [ -n "$GEM_USER_DIR" ]; then
+    export PATH="$GEM_USER_DIR/bin:$PATH"
+  fi
+fi
+
+# Set name of the theme to load
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Source oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+# You may want to put all your additions into a separate file like
+# ~/.zsh_aliases, instead of adding them here directly.
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# fzf configuration
+source <(fzf --zsh)
+
+# logo-ls configuration
+alias ls='logo-ls'
+alias la='logo-ls -A'
+alias ll='logo-ls -al'
+
+# pipx
+export PATH="$PATH:$HOME/.local/bin"
+
+# misc
+alias tmp="cd /home/$USER/Downloads"
+

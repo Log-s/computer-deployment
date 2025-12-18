@@ -1,0 +1,16 @@
+---
+# Common variables for all profiles
+ansible_python_interpreter: /usr/bin/python3
+
+# User configuration
+# user_name and user_home are set in each playbook from target_user and target_user_home
+# which are passed via -e from install.sh
+
+# Configuration paths
+configs_dir: "{{ playbook_dir }}/../configs"
+
+# Base packages (to be extended by profiles)
+base_apt_packages: []
+base_pipx_packages: []
+base_source_installs: []
+

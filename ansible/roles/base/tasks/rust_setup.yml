@@ -1,0 +1,24 @@
+---
+# Install Rust toolchain for the target user via rustup
+
+- name: Check if rustup is already installed
+  stat:
+    path: "{{ user_home }}/.cargo/bin/rustup"
+  register: rustup_stat
+
+- name: Install Rust via rustup (non-interactive)
+  shell: |
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ user_home }}"
+    USER: "{{ user_name }}"
+    CARGO_HOME: "{{ user_home }}/.cargo"
+    RUSTUP_HOME: "{{ user_home }}/.rustup"
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+  become: yes
+  become_user: "{{ user_name }}"
+  when: not rustup_stat.stat.exists
+
+

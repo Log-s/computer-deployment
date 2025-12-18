@@ -1,0 +1,43 @@
+---
+# Install pipx packages (pipx itself is installed via apt)
+
+- name: Ensure pipx binary directory exists
+  file:
+    path: "{{ user_home }}/.local/bin"
+    state: directory
+    mode: '0755'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  become: yes
+
+- name: Install pipx packages (from git)
+  command: "pipx install {{ item }}"
+  loop: "{{ base_pipx_packages }}"
+  when: 
+    - base_pipx_packages | length > 0
+    - (item | regex_search('git\\+|github\\.com')) is not none
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+    HOME: "{{ user_home }}"
+    PIPX_HOME: "{{ user_home }}/.local/pipx"
+    PIPX_BIN_DIR: "{{ user_home }}/.local/bin"
+  # pipx is idempotent, so no creates check needed
+  become: yes
+  become_user: "{{ user_name }}"
+
+- name: Install pipx packages (regular packages)
+  command: "pipx install {{ item }}"
+  args:
+    creates: "{{ user_home }}/.local/bin/{{ item.split('==')[0].split('@')[0] }}"
+  loop: "{{ base_pipx_packages }}"
+  when: 
+    - base_pipx_packages | length > 0
+    - (item | regex_search('git\\+|github\\.com')) is none
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
+    HOME: "{{ user_home }}"
+    PIPX_HOME: "{{ user_home }}/.local/pipx"
+    PIPX_BIN_DIR: "{{ user_home }}/.local/bin"
+  become: yes
+  become_user: "{{ user_name }}"
+

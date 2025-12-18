@@ -1,0 +1,33 @@
+---
+# Perso role default variables
+
+# Additional APT packages for perso profile (after Regolith repo is added)
+perso_apt_packages:
+  - regolith-desktop
+  - regolith-session-flashback
+  - regolith-look-dracula
+  - i3xrocks-app-launcher
+  - i3xrocks-battery
+  - i3xrocks-bluetooth
+  - i3xrocks-cpu-usage
+  - i3xrocks-info
+  - i3xrocks-net-traffic
+  - i3xrocks-microphone
+  - lightdm
+  - flameshot
+
+# Additional pipx packages for perso profile
+perso_pipx_packages: []
+
+# Additional source installations for perso profile
+perso_source_installs: []
+
+# Additional configuration files for perso profile
+perso_configs:
+  - name: regolith3_xresources
+    src: "{{ configs_dir }}/regolith3/Xresources"
+    dest: "{{ user_home }}/.config/regolith3/Xresources"
+  - name: regolith3_keybindings
+    src: "{{ configs_dir }}/regolith3/i3/config.d/95_custom_keybinding"
+    dest: "{{ user_home }}/.config/regolith3/i3/config.d/95_custom_keybinding"
+

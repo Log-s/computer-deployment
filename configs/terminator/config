@@ -1,0 +1,22 @@
+[global_config]
+  borderless = True
+[keybindings]
+  go_up = ""
+  go_down = ""
+  go_left = ""
+  go_right = ""
+  copy = ""
+  paste = <Primary><Shift>v
+[profiles]
+  [[default]]
+    background_color = "#3e495c"
+    show_titlebar = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

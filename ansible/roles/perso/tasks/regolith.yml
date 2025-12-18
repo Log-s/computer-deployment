@@ -1,0 +1,32 @@
+---
+# Install Regolith desktop environment for Debian Trixie
+
+- name: Create keyrings directory if it doesn't exist
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Download and install Regolith GPG keyring
+  shell: |
+    wget -qO - https://archive.regolith-desktop.com/regolith.key | gpg --dearmor | sudo tee /usr/share/keyrings/regolith-archive-keyring.gpg > /dev/null
+  args:
+    creates: /usr/share/keyrings/regolith-archive-keyring.gpg
+  become: yes
+
+- name: Add Regolith repository for Debian Trixie
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/testing trixie main"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install Regolith packages
+  apt:
+    name: "{{ perso_apt_packages }}"
+    state: present
+    update_cache: yes
+  become: yes
+  when: perso_apt_packages | length > 0
+

@@ -1,0 +1,38 @@
+---
+# Configure Docker and Podman for the user
+
+- name: Ensure docker group exists
+  group:
+    name: docker
+    state: present
+  become: yes
+
+- name: Ensure podman group exists (if podman creates it)
+  group:
+    name: podman
+    state: present
+  become: yes
+  ignore_errors: yes
+
+- name: Add user to docker group
+  user:
+    name: "{{ user_name }}"
+    groups: docker
+    append: yes
+  become: yes
+
+- name: Add user to podman group
+  user:
+    name: "{{ user_name }}"
+    groups: podman
+    append: yes
+  become: yes
+  ignore_errors: yes
+
+- name: Start and enable Docker service
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+  become: yes
+

@@ -1,0 +1,14 @@
+---
+- name: Personal Profile Installation
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  
+  vars:
+    user_name: "{{ target_user }}"
+    user_home: "{{ target_user_home }}"
+    configs_dir: "{{ playbook_dir }}/../../configs"
+  
+  roles:
+    - perso
+

@@ -1,0 +1,42 @@
+---
+# Install and configure zsh and oh-my-zsh
+
+- name: Check if oh-my-zsh is already installed
+  stat:
+    path: "{{ user_home }}/.oh-my-zsh"
+  register: oh_my_zsh_installed
+
+- name: Install oh-my-zsh
+  shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ user_home }}/.oh-my-zsh"
+  when: not oh_my_zsh_installed.stat.exists
+  environment:
+    ZSH: "{{ user_home }}/.oh-my-zsh"
+    RUNZSH: "no"
+
+- name: Set zsh as default shell
+  user:
+    name: "{{ user_name }}"
+    shell: /usr/bin/zsh
+  become: yes
+
+- name: Ensure oh-my-zsh custom plugins directory exists
+  file:
+    path: "{{ user_home }}/.oh-my-zsh/custom/plugins"
+    state: directory
+    mode: '0755'
+
+- name: Install zsh-autosuggestions plugin
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "{{ user_home }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    update: yes
+
+- name: Install zsh-syntax-highlighting plugin
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ user_home }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    update: yes
+

@@ -1,0 +1,24 @@
+---
+# Configure lightdm as display manager (replace gdm if present)
+
+- name: Remove gdm if installed
+  apt:
+    name: gdm3
+    state: absent
+  become: yes
+  ignore_errors: yes
+
+- name: Ensure lightdm is installed
+  apt:
+    name: lightdm
+    state: present
+  become: yes
+
+- name: Set lightdm as default display manager
+  debconf:
+    name: lightdm
+    question: shared/default-x-display-manager
+    value: lightdm
+    vtype: select
+  become: yes
+
