@@ -1,6 +1,6 @@
 ---
-# Main task file for perso role
-# Extends base role with perso-specific additions
+# Main task file for graphical role
+# Extends base role with graphical-specific additions
 
 - name: Include base role
   include_role:
@@ -15,44 +15,44 @@
 - name: Install Discord
   include_tasks: discord.yml
 
-- name: Install perso pipx packages
+- name: Install graphical pipx packages
   command: "pipx install {{ item }}"
   args:
     creates: "{{ user_home }}/.local/bin/{{ item.split('==')[0].split('@')[0] }}"
-  loop: "{{ perso_pipx_packages }}"
-  when: perso_pipx_packages | length > 0
+  loop: "{{ graphical_pipx_packages }}"
+  when: graphical_pipx_packages | length > 0
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
 
-- name: Ensure category directory exists for perso source installations
+- name: Ensure category directory exists for graphical source installations
   file:
     path: "{{ user_home }}/Tools/{{ item.category }}"
     state: directory
     mode: '0755'
-  loop: "{{ perso_source_installs }}"
-  when: perso_source_installs | length > 0
+  loop: "{{ graphical_source_installs }}"
+  when: graphical_source_installs | length > 0
 
-- name: Clone perso source installations
+- name: Clone graphical source installations
   git:
     repo: "{{ item.repo }}"
     dest: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
     update: yes
-  loop: "{{ perso_source_installs }}"
-  when: perso_source_installs | length > 0
+  loop: "{{ graphical_source_installs }}"
+  when: graphical_source_installs | length > 0
 
-- name: Build and install perso source installations
+- name: Build and install graphical source installations
   shell: "{{ item.build_commands | join(' && ') }}"
   args:
     chdir: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
-  loop: "{{ perso_source_installs }}"
+  loop: "{{ graphical_source_installs }}"
   when: 
-    - perso_source_installs | length > 0
+    - graphical_source_installs | length > 0
     - item.build_commands is defined
     - item.build_commands | length > 0
   environment:
     PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.local/bin"
 
-- name: Ensure perso config directories exist
+- name: Ensure graphical config directories exist
   become: yes
   file:
     path: "{{ item.dest | dirname }}"
@@ -60,10 +60,10 @@
     mode: '0755'
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
-  loop: "{{ perso_configs }}"
-  when: perso_configs | length > 0
+  loop: "{{ graphical_configs }}"
+  when: graphical_configs | length > 0
 
-- name: Deploy perso configuration files
+- name: Deploy graphical configuration files
   become: yes
   copy:
     src: "{{ item.src }}"
@@ -72,7 +72,7 @@
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     remote_src: false
-  loop: "{{ perso_configs }}"
-  when: perso_configs | length > 0
+  loop: "{{ graphical_configs }}"
+  when: graphical_configs | length > 0
   ignore_errors: yes
 

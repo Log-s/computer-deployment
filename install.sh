@@ -104,24 +104,20 @@ show_help() {
     echo "    -h, --help              Show this help message and exit"
     echo "    -v                      Show Ansible task details"
     echo "    -vv                     Show task details and underlying commands (apt logs, etc.)"
-    echo "    --profile PROFILE       Select installation profile (base, perso, or work)"
+    echo "    --profile PROFILE       Select installation profile (base or graphical)"
     echo "                            Default: base"
     echo ""
     echo -e "${YELLOW}PROFILES:${NC}"
-    echo -e "    ${GREEN}base${NC}   Base installation profile with essential tools and configurations"
+    echo -e "    ${GREEN}base${NC}       Base installation profile with essential tools and configurations"
     echo ""
-    echo -e "    ${GREEN}perso${NC}  Personal profile (extends base)"
-    echo "            - Adds graphical environment (Regolith desktop) and personal applications"
-    echo ""
-    echo -e "    ${GREEN}work${NC}   Work profile (extends base)"
-    echo "            - Adds remote application capabilities (xpra)"
+    echo -e "    ${GREEN}graphical${NC}  Graphical profile (extends base)"
+    echo "                - Adds graphical environment (Regolith desktop) and personal applications"
     echo ""
     echo -e "${YELLOW}EXAMPLES:${NC}"
     echo "    $0 myuser                           # Install base profile for myuser"
-    echo "    $0 --profile perso myuser            # Install perso profile for myuser"
-    echo "    $0 --profile work myuser             # Install work profile for myuser"
-    echo "    $0 -v --profile perso myuser         # Install with verbose output"
-    echo "    $0 -vv --profile base myuser         # Install with very verbose output (shows apt logs, etc.)"
+    echo "    $0 --profile graphical myuser       # Install graphical profile for myuser"
+    echo "    $0 -v --profile graphical myuser    # Install with verbose output"
+    echo "    $0 -vv --profile base myuser        # Install with very verbose output (shows apt logs, etc.)"
     echo "    $0 -h                                # Show this help message"
     echo ""
     echo -e "${YELLOW}PREREQUISITES:${NC}"
@@ -230,9 +226,9 @@ parse_args() {
     ensure_user_exists "$target_user"
     
     # Validate profile
-    if [[ "$profile" != "base" && "$profile" != "perso" && "$profile" != "work" ]]; then
+    if [[ "$profile" != "base" && "$profile" != "graphical" ]]; then
         print_error "Invalid profile: $profile"
-        echo "Valid profiles are: base, perso, work"
+        echo "Valid profiles are: base, graphical"
         exit 1
     fi
     

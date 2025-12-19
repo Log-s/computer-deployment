@@ -2,6 +2,12 @@
 # Main task file for base role
 # Includes all sub-task files
 
+- name: Install sudo first (before any other packages)
+  apt:
+    name: sudo
+    state: present
+  become: yes
+
 - name: Setup VS Code apt repository
   include_tasks: vscode_repo.yml
 
@@ -28,6 +34,19 @@
 
 - name: Clean up default home directories
   include_tasks: cleanup_home.yml
+
+- name: Ensure required home directories exist (Documents, Downloads, Tools)
+  file:
+    path: "{{ user_home }}/{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+  loop:
+    - Documents
+    - Downloads
+    - Tools
+  become: yes
 
 - name: Deploy zshrc configuration before setting zsh as default shell
   copy:

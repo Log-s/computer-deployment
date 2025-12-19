@@ -24,9 +24,9 @@
 
 - name: Install Regolith packages
   apt:
-    name: "{{ perso_apt_packages }}"
+    name: "{{ graphical_apt_packages }}"
     state: present
     update_cache: yes
   become: yes
-  when: perso_apt_packages | length > 0
+  when: graphical_apt_packages | length > 0
 

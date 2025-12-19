@@ -1,8 +1,8 @@
 ---
-# Perso role default variables
+# Graphical role default variables
 
-# Additional APT packages for perso profile (after Regolith repo is added)
-perso_apt_packages:
+# Additional APT packages for graphical profile (after Regolith repo is added)
+graphical_apt_packages:
   - regolith-desktop
   - regolith-session-flashback
   - regolith-look-dracula
@@ -16,14 +16,14 @@ perso_apt_packages:
   - lightdm
   - flameshot
 
-# Additional pipx packages for perso profile
-perso_pipx_packages: []
+# Additional pipx packages for graphical profile
+graphical_pipx_packages: []
 
-# Additional source installations for perso profile
-perso_source_installs: []
+# Additional source installations for graphical profile
+graphical_source_installs: []
 
-# Additional configuration files for perso profile
-perso_configs:
+# Additional configuration files for graphical profile
+graphical_configs:
   - name: regolith3_xresources
     src: "{{ configs_dir }}/regolith3/Xresources"
     dest: "{{ user_home }}/.config/regolith3/Xresources"

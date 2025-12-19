@@ -3,6 +3,7 @@
 
 # APT packages to install
 base_apt_packages:
+  - sudo
   - git
   - gpg
   - curl
@@ -26,7 +27,6 @@ base_apt_packages:
   - fzf
   - wireshark
   - net-tools
-  - sudo
   - docker.io
   - podman
   - terminator
@@ -35,6 +35,10 @@ base_apt_packages:
   - apt-transport-https
   - code
   - bruno
+  - proxychains4
+  - i3lock
+  - imagemagick
+  - scrot
 
 # pipx packages to install
 base_pipx_packages:
@@ -59,6 +63,9 @@ base_source_installs:
   - repo: "https://github.com/lgandx/Responder.git"
     category: "ad"
     name: "Responder"
+  - repo: "https://github.com/fortra/impacket.git"
+    category: "ad"
+    name: "impacket_pub"
   - repo: "https://github.com/lakinduakash/linux-wifi-hotspot"
     category: "network"
     name: "linux-wifi-hotspot"
@@ -68,9 +75,6 @@ base_source_installs:
   - repo: "https://github.com/semgrep/semgrep-rules.git"
     category: "code"
     name: "semgrep-rules"
-  - repo: "https://github.com/danielmiessler/SecLists.git"
-    category: "web"
-    name: "SecLists"
 
 # Configuration files to deploy
 base_configs:

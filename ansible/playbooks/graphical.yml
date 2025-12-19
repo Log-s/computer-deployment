@@ -1,5 +1,5 @@
 ---
-- name: Work Profile Installation
+- name: Graphical Profile Installation
   hosts: localhost
   connection: local
   gather_facts: yes
@@ -10,5 +10,5 @@
     configs_dir: "{{ playbook_dir }}/../../configs"
   
   roles:
-    - work
+    - graphical
 
