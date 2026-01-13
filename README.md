@@ -1,12 +1,12 @@
-# Pentest Installer
+# Computer setup
 
 An Ansible + bash installer for setting up a pentesting environment on **Debian 13 (Trixie)**.
 
-It supports **profiles**: a common **base**, plus optional **perso** (desktop environment) and **work** (remote-app capabilities).
+It supports **profiles**: a common **base**, plus optional **graphical** (desktop environment).
 
 ## Features
 
-- **Profile-based installation**: base / perso / work
+- **Profile-based installation**: base / graphical
 - **Multiple installation methods**: apt, pipx, and git clones
 - **Configuration management**: deploys dotfiles and app configs into the target user’s home
 - **Idempotent**: Safe to run multiple times
@@ -27,13 +27,14 @@ It supports **profiles**: a common **base**, plus optional **perso** (desktop en
 ./install.sh <user>
 ```
 
+**About the USER parameter**: This is the main user account on the computer. The user can already exist on the system. If the user doesn't exist, it will be automatically created with a password set to the username.
+
 Optionally specify a profile (default is base) and verbosity. Some examples:
 
 ```bash
-./install.sh --profile perso <user>
-./install.sh --profile work <user>
+./install.sh --profile graphical <user>
 
-./install.sh -v --profile perso <user>
+./install.sh -v --profile graphical <user>
 ./install.sh -vv --profile base <user>
 ```
 
@@ -47,22 +48,42 @@ For full CLI help, run:
 
 ### Base Profile
 
-The base profile installs the core tools + configurations. It also:
+The base profile installs a comprehensive set of tools and configurations for penetration testing and development. It includes:
+
+**System & Development Tools:**
+- Essential system utilities (git, curl, wget, zip, gpg, sudo)
+- Programming languages: **Go**, **Python 3** (with pip, venv), **Ruby** (with gems), **Rust** (via rustup), **Node.js** (npm)
+- Build tools: build-essential, composer
+- Containerization: **Docker** and **Podman**
+
+**Security & Penetration Testing Tools:**
+- Network tools: **Wireshark**, **tcpdump**, **netcat-traditional**, **proxychains4**
+- Security tools: **sqlmap**, **hashcat**
+- APT repositories for: **VS Code**, **Bruno** (API client)
+- pipx packages: **impacket**, **Responder**, **mitmproxy**, **updog**
+- Source installations: **krbrelayx**, **impacket_pub**, **linux-wifi-hotspot**, **semgrep-rules**
+- **WPScan** (Ruby gem for WordPress security scanning)
+
+**Terminal & Editor:**
+- **Kitty** terminal emulator (with configuration)
+- **tmux** with TPM (plugin manager)
+- **zsh** with **oh-my-zsh** (including plugins)
+- **Neovim** (latest release) with dependencies
+
+**User Setup:**
 - Adds the target user to **sudo**, **docker**, and **podman** groups
 - Sets up **zsh + oh-my-zsh** (including plugins) and ensures pipx apps are on PATH
 - Generates an **ed25519 SSH keypair** for the user (no passphrase)
+- Creates home directories: `Documents`, `Downloads`, `Tools`
+- Deploys configuration files: **tmux**, **zsh**, **kitty**, **nvim**
 
-### Personal Profile (perso)
+**And more...**
+
+### Graphical Profile
 
 Extends the base profile with:
 - A graphical environment (Regolith) with its configuration
-- Desktop/user apps (e.g. Discord, flameshot)
-
-### Work Profile (work)
-
-Extends the base profile with:
-- xpra (remote application capabilities)
-- Work-specific tools and configurations
+- Desktop/user apps (e.g. Discord)
 
 ## Where things go
 
@@ -74,24 +95,23 @@ Extends the base profile with:
 ## Project Structure
 
 ```
-pentest-installer/
+computer-deployment/
 ├── install.sh                 # Main installer script
 ├── ansible/
 │   ├── ansible.cfg           # Ansible configuration
 │   ├── playbooks/            # Playbook files
 │   │   ├── base.yml
-│   │   ├── perso.yml
-│   │   └── work.yml
+│   │   └── graphical.yml
 │   ├── roles/                # Ansible roles
 │   │   ├── base/             # Base role
-│   │   ├── perso/            # Personal profile role
-│   │   └── work/             # Work profile role
+│   │   └── graphical/        # Graphical profile role
 │   └── group_vars/
 │       └── all.yml           # Common variables
 └── configs/                  # Configuration templates
     ├── tmux/
     ├── zsh/
-    ├── terminator/
+    ├── kitty/
+    ├── nvim/
     ├── regolith3/
     └── README.md
 ```
@@ -108,13 +128,9 @@ base_apt_packages:
   - git
   - your-new-package
 
-# For perso role
-perso_apt_packages:
-  - your-perso-package
-
-# For work role
-work_apt_packages:
-  - your-work-package
+# For graphical role
+graphical_apt_packages:
+  - your-graphical-package
 ```
 
 ### Adding pipx Packages

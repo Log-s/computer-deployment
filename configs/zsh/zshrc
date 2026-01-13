@@ -50,8 +50,9 @@ alias ls='logo-ls'
 alias la='logo-ls -A'
 alias ll='logo-ls -al'
 
-# pipx
-export PATH="$PATH:$HOME/.local/bin"
+# Path
+export PATH="$PATH:$HOME/.local/bin" # pipx
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin" # nvim
 
 # misc
 alias tmp="cd /home/$USER/Downloads"

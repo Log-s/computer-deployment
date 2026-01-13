@@ -26,11 +26,26 @@
   when: 
     - base_configs | length > 0
     - item.name != 'zshrc'  # zshrc is deployed earlier before shell setup
+    - item.name != 'nvim'  # nvim is a directory, handled separately
   register: config_result
   ignore_errors: yes
   become: yes
   loop_control:
     label: "{{ item.name }}"
+
+- name: Deploy Neovim configuration directory
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    remote_src: false
+    mode: preserve
+  loop: "{{ base_configs }}"
+  when: 
+    - base_configs | length > 0
+    - item.name == 'nvim'
+  become: yes
 
 - name: Report configuration deployment status
   debug:

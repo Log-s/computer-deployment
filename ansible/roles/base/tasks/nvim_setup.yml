@@ -1,0 +1,92 @@
+---
+# Install Neovim and dependencies
+
+- name: Download Neovim tarball
+  get_url:
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    dest: /tmp/nvim-linux-x86_64.tar.gz
+    mode: '0644'
+  become: yes
+
+- name: Remove existing Neovim installation
+  file:
+    path: /opt/nvim-linux-x86_64
+    state: absent
+  become: yes
+
+- name: Extract Neovim to /opt
+  unarchive:
+    src: /tmp/nvim-linux-x86_64.tar.gz
+    dest: /opt
+    remote_src: yes
+  become: yes
+
+- name: Create symlink for nvim in /usr/local/bin
+  file:
+    src: /opt/nvim-linux-x86_64/bin/nvim
+    dest: /usr/local/bin/nvim
+    state: link
+  become: yes
+
+- name: Install Neovim dependencies via apt
+  apt:
+    name:
+      - ripgrep
+      - luarocks
+      - fd-find
+      - fish-common
+      - npm
+      - composer
+      - imagemagick
+      - sqlite3
+    state: present
+  become: yes
+
+- name: Check if rustup is already installed
+  stat:
+    path: "{{ user_home }}/.cargo/bin/rustup"
+  register: rustup_stat
+
+- name: Install tree-sitter-cli via cargo
+  shell: |
+    {{ user_home }}/.cargo/bin/cargo install --locked tree-sitter-cli
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ user_home }}"
+    USER: "{{ user_name }}"
+    CARGO_HOME: "{{ user_home }}/.cargo"
+    RUSTUP_HOME: "{{ user_home }}/.rustup"
+    PATH: "{{ ansible_env.PATH }}:{{ user_home }}/.cargo/bin"
+  become: yes
+  become_user: "{{ user_name }}"
+  when: rustup_stat.stat.exists
+
+- name: Install neovim npm package globally
+  npm:
+    name: neovim
+    global: yes
+  environment:
+    HOME: "{{ user_home }}"
+    USER: "{{ user_name }}"
+    PATH: "{{ ansible_env.PATH }}:/usr/bin"
+  become: yes
+  become_user: "{{ user_name }}"
+
+- name: Install neovim gem
+  gem:
+    name: neovim
+    user_install: yes
+  environment:
+    HOME: "{{ user_home }}"
+    USER: "{{ user_name }}"
+    PATH: "{{ ansible_env.PATH }}"
+  become: yes
+  become_user: "{{ user_name }}"
+
+- name: Clean up Neovim tarball
+  file:
+    path: /tmp/nvim-linux-x86_64.tar.gz
+    state: absent
+  become: yes
+

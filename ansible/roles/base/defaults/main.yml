@@ -29,8 +29,16 @@ base_apt_packages:
   - net-tools
   - docker.io
   - podman
-  - terminator
+  - kitty
   - sqlmap
+  - netcat-traditional
+  - npm
+  - ripgrep
+  - luarocks
+  - fd-find
+  - fish-common
+  - composer
+  - sqlite3
   - hashcat
   - apt-transport-https
   - code
@@ -84,7 +92,10 @@ base_configs:
   - name: zshrc
     src: "{{ configs_dir }}/zsh/zshrc"
     dest: "{{ user_home }}/.zshrc"
-  - name: terminator
-    src: "{{ configs_dir }}/terminator/config"
-    dest: "{{ user_home }}/.config/terminator/config"
+  - name: kitty
+    src: "{{ configs_dir }}/kitty/kitty.conf"
+    dest: "{{ user_home }}/.config/kitty/kitty.conf"
+  - name: nvim
+    src: "{{ configs_dir }}/nvim"
+    dest: "{{ user_home }}/.config/nvim"
 

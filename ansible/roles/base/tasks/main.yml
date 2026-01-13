@@ -65,6 +65,9 @@
 - name: Install Rust toolchain (rustup) for target user
   include_tasks: rust_setup.yml
 
+- name: Install Neovim and dependencies
+  include_tasks: nvim_setup.yml
+
 - name: Include source installations
   include_tasks: source_installs.yml
 
