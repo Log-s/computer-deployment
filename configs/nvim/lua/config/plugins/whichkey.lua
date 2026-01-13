@@ -66,4 +66,9 @@ wk.add({
   { "<leader>wv", group = "󰁌 Split vertically" },
   { "<leader>ws", group = "󰁍 Split horizontally" },
   { "<leader>wc", group = "󰅖 Close window" },
+  { "<leader>a", group = "󰧑 AI (Cursor)" },
+  { "<leader>ai", desc = "󰘳 Toggle agent" },
+  { "<leader>an", desc = "󰎔 New agent" },
+  { "<leader>at", desc = "󰒋 Select agent" },
+  { "<leader>ar", desc = "󰏫 Rename agent" },
 })

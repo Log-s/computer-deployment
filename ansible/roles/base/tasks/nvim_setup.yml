@@ -1,18 +1,30 @@
 ---
 # Install Neovim and dependencies
 
+- name: Check if Neovim is already installed
+  stat:
+    path: /usr/local/bin/nvim
+  register: nvim_installed
+
+- name: Check if Neovim binary exists in /opt
+  stat:
+    path: /opt/nvim-linux-x86_64/bin/nvim
+  register: nvim_binary_exists
+
 - name: Download Neovim tarball
   get_url:
     url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
     dest: /tmp/nvim-linux-x86_64.tar.gz
     mode: '0644'
   become: yes
+  when: not (nvim_installed.stat.exists and nvim_binary_exists.stat.exists)
 
 - name: Remove existing Neovim installation
   file:
     path: /opt/nvim-linux-x86_64
     state: absent
   become: yes
+  when: not (nvim_installed.stat.exists and nvim_binary_exists.stat.exists)
 
 - name: Extract Neovim to /opt
   unarchive:
@@ -20,6 +32,7 @@
     dest: /opt
     remote_src: yes
   become: yes
+  when: not (nvim_installed.stat.exists and nvim_binary_exists.stat.exists)
 
 - name: Create symlink for nvim in /usr/local/bin
   file:
@@ -27,6 +40,7 @@
     dest: /usr/local/bin/nvim
     state: link
   become: yes
+  when: not nvim_installed.stat.exists or not nvim_installed.stat.islnk
 
 - name: Install Neovim dependencies via apt
   apt:
@@ -52,6 +66,7 @@
     {{ user_home }}/.cargo/bin/cargo install --locked tree-sitter-cli
   args:
     executable: /bin/bash
+    creates: "{{ user_home }}/.cargo/bin/tree-sitter"
   environment:
     HOME: "{{ user_home }}"
     USER: "{{ user_name }}"
@@ -62,16 +77,21 @@
   become_user: "{{ user_name }}"
   when: rustup_stat.stat.exists
 
+- name: Check if neovim npm package is installed globally
+  command: npm list -g neovim
+  register: npm_neovim_check
+  changed_when: false
+  failed_when: false
+  become: yes
+
 - name: Install neovim npm package globally
   npm:
     name: neovim
     global: yes
   environment:
-    HOME: "{{ user_home }}"
-    USER: "{{ user_name }}"
     PATH: "{{ ansible_env.PATH }}:/usr/bin"
   become: yes
-  become_user: "{{ user_name }}"
+  when: npm_neovim_check.rc != 0
 
 - name: Install neovim gem
   gem:
@@ -89,4 +109,5 @@
     path: /tmp/nvim-linux-x86_64.tar.gz
     state: absent
   become: yes
+  when: not (nvim_installed.stat.exists and nvim_binary_exists.stat.exists)
 

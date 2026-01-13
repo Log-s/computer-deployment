@@ -193,5 +193,13 @@ require("lazy").setup({
       require("config.plugins.noice")
     end,
   },
+
+  -- Cursor CLI access
+    {
+      "felixcuello/neovim-cursor",
+      config = function()
+        require("neovim-cursor").setup()
+      end,
+    },
 })
 

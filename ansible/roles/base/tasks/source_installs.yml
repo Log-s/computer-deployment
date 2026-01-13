@@ -25,9 +25,10 @@
   register: git_clone_result
 
 - name: Build and install from source
-  shell: "{{ item.build_commands | join(' && ') }}"
+  shell: "{{ item.build_commands | join(' && ') }} && touch .ansible_build_marker"
   args:
     chdir: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}"
+    creates: "{{ user_home }}/Tools/{{ item.category }}/{{ item.name }}/.ansible_build_marker"
   loop: "{{ base_source_installs }}"
   when: 
     - base_source_installs | length > 0
