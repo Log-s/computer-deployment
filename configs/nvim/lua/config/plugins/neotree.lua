@@ -20,11 +20,10 @@ require("neo-tree").setup({
       hide_dotfiles = false,
       hide_gitignored = true,
     },
-    window = {
-      mappings = {
-        ["<c-v>"] = "open_vsplit",
-        ["<c-s>"] = "open_split",
-      },
+  window = {
+    mappings = {
+      ["<c-v>"] = "open_vsplit",
+      ["<c-s>"] = "open_split",
     },
   },
 })
