@@ -70,3 +70,87 @@ end, { desc = "Close window", noremap = true, silent = true })
 keymap("n", "<leader>cf", function()
 	require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "Format code", noremap = true, silent = true })
+
+-- LSP keymaps (set when LSP attaches to a buffer)
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		local buf_opts = { buffer = ev.buf, noremap = true, silent = true }
+		keymap("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", buf_opts, { desc = "Go to declaration" }))
+		keymap("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", buf_opts, { desc = "Go to definition" }))
+		keymap("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", buf_opts, { desc = "Hover documentation" }))
+		keymap(
+			"n",
+			"gi",
+			vim.lsp.buf.implementation,
+			vim.tbl_extend("force", buf_opts, { desc = "Go to implementation" })
+		)
+		keymap("n", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", buf_opts, { desc = "Signature help" }))
+		keymap(
+			"n",
+			"<leader>wa",
+			vim.lsp.buf.add_workspace_folder,
+			vim.tbl_extend("force", buf_opts, { desc = "Add workspace folder" })
+		)
+		keymap(
+			"n",
+			"<leader>wr",
+			vim.lsp.buf.remove_workspace_folder,
+			vim.tbl_extend("force", buf_opts, { desc = "Remove workspace folder" })
+		)
+		keymap("n", "<leader>wl", function()
+			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+		end, vim.tbl_extend("force", buf_opts, { desc = "List workspace folders" }))
+		keymap(
+			"n",
+			"<leader>D",
+			vim.lsp.buf.type_definition,
+			vim.tbl_extend("force", buf_opts, { desc = "Type definition" })
+		)
+		keymap("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", buf_opts, { desc = "Rename symbol" }))
+		keymap(
+			{ "n", "v" },
+			"<leader>ca",
+			vim.lsp.buf.code_action,
+			vim.tbl_extend("force", buf_opts, { desc = "Code action" })
+		)
+		keymap("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", buf_opts, { desc = "References" }))
+	end,
+})
+
+-- Cursor AI keymaps
+keymap("n", "<leader>ai", function()
+	local ok, cursor = pcall(require, "neovim-cursor")
+	if ok then
+		cursor.toggle()
+	else
+		vim.notify("neovim-cursor not loaded", vim.log.levels.WARN)
+	end
+end, { desc = "Toggle agent window", noremap = true, silent = true })
+
+keymap("n", "<leader>an", function()
+	local ok, cursor = pcall(require, "neovim-cursor")
+	if ok then
+		cursor.new()
+	else
+		vim.notify("neovim-cursor not loaded", vim.log.levels.WARN)
+	end
+end, { desc = "New agent terminal", noremap = true, silent = true })
+
+keymap("n", "<leader>at", function()
+	local ok, cursor = pcall(require, "neovim-cursor")
+	if ok then
+		cursor.select()
+	else
+		vim.notify("neovim-cursor not loaded", vim.log.levels.WARN)
+	end
+end, { desc = "Select agent terminal", noremap = true, silent = true })
+
+keymap("n", "<leader>ar", function()
+	local ok, cursor = pcall(require, "neovim-cursor")
+	if ok then
+		cursor.rename()
+	else
+		vim.notify("neovim-cursor not loaded", vim.log.levels.WARN)
+	end
+end, { desc = "Rename agent terminal", noremap = true, silent = true })
