@@ -6,6 +6,20 @@ local opts = { noremap = true, silent = true }
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Disable arrow-key navigation
+keymap("n", "<Up>", ":echoe 'Get off my lawn!'<CR>")
+keymap("n", "<Down>", ":echoe 'Get off my lawn!'<CR>")
+keymap("n", "<Left>", ":echoe 'Get off my lawn!'<CR>")
+keymap("n", "<Right>", ":echoe 'Get off my lawn!'<CR>")
+keymap("i", "<Up>", "<C-o>:echoe 'Get off my lawn!'<CR>")
+keymap("i", "<Down>", "<C-o>:echoe 'Get off my lawn!'<CR>")
+keymap("i", "<Left>", "<C-o>:echoe 'Get off my lawn!'<CR>")
+keymap("i", "<Right>", "<C-o>:echoe 'Get off my lawn!'<CR>")
+keymap("v", "<Up>", ":<C-u>echoe 'Get off my lawn!'<CR>")
+keymap("v", "<Down>", ":<C-u>echoe 'Get off my lawn!'<CR>")
+keymap("v", "<Left>", ":<C-u>echoe 'Get off my lawn!'<CR>")
+keymap("v", "<Right>", ":<C-u>echoe 'Get off my lawn!'<CR>")
+
 -- Window navigation
 keymap("n", "<C-h>", "<C-w>h", { desc = "󰁍 Left", noremap = true, silent = true })
 keymap("n", "<C-j>", "<C-w>j", { desc = "󰁅 Down", noremap = true, silent = true })
