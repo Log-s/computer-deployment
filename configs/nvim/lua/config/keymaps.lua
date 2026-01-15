@@ -1,6 +1,5 @@
 -- Key mappings
 local keymap = vim.keymap.set
-local opts = { noremap = true, silent = true }
 
 -- Leader key
 vim.g.mapleader = " "
@@ -20,6 +19,9 @@ keymap("v", "<Down>", ":<C-u>echoe 'Get off my lawn!'<CR>")
 keymap("v", "<Left>", ":<C-u>echoe 'Get off my lawn!'<CR>")
 keymap("v", "<Right>", ":<C-u>echoe 'Get off my lawn!'<CR>")
 
+-- Exit insert mode
+keymap("i", "jj", "<Esc>", { noremap = false })
+
 -- Window navigation
 keymap("n", "<C-h>", "<C-w>h", { desc = "󰁍 Left", noremap = true, silent = true })
 keymap("n", "<C-j>", "<C-w>j", { desc = "󰁅 Down", noremap = true, silent = true })
@@ -29,6 +31,40 @@ keymap("n", "<C-l>", "<C-w>l", { desc = "󰁔 Right", noremap = true, silent = t
 -- Diagnostic navigation
 keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "󰒕 Prev diagnostic", noremap = true, silent = true })
 keymap("n", "]d", vim.diagnostic.goto_next, { desc = "󰒔 Next diagnostic", noremap = true, silent = true })
+
+-- Toggle diagnostic display
+keymap("n", "<leader>tv", function()
+	local config = vim.diagnostic.config()
+	local current = config.virtual_text
+	vim.diagnostic.config({ virtual_text = not current })
+	vim.notify("Virtual text: " .. (not current and "on" or "off"), vim.log.levels.INFO)
+end, { desc = "󰒕 Virtual text", noremap = true, silent = true })
+
+keymap("n", "<leader>ts", function()
+	local config = vim.diagnostic.config()
+	local current = config.signs
+	vim.diagnostic.config({ signs = not current })
+	vim.notify("Diagnostic signs: " .. (not current and "on" or "off"), vim.log.levels.INFO)
+end, { desc = "󰒔 Signs", noremap = true, silent = true })
+
+keymap("n", "<leader>tu", function()
+	local config = vim.diagnostic.config()
+	local current = config.underline
+	vim.diagnostic.config({ underline = not current })
+	vim.notify("Underline: " .. (not current and "on" or "off"), vim.log.levels.INFO)
+end, { desc = "󰒓 Underline", noremap = true, silent = true })
+
+-- Toggle all diagnostics at once
+keymap("n", "<leader>td", function()
+	local config = vim.diagnostic.config()
+	local all_off = not config.virtual_text and not config.signs and not config.underline
+	vim.diagnostic.config({
+		virtual_text = all_off,
+		signs = all_off,
+		underline = all_off,
+	})
+	vim.notify("All diagnostics: " .. (all_off and "on" or "off"), vim.log.levels.INFO)
+end, { desc = "󰒒 All diagnostics", noremap = true, silent = true })
 
 -- File explorer (Neotree)
 keymap("n", "<leader>n", function()
@@ -43,12 +79,12 @@ end, { desc = "󰉋 Toggle explorer", noremap = true, silent = true })
 -- Toggle line numbers
 keymap("n", "<leader>tn", function()
 	vim.opt.number = not vim.opt.number:get()
-end, { desc = "󰎠 Toggle numbers", noremap = true, silent = true })
+end, { desc = "󰎠 Line numbers", noremap = true, silent = true })
 
 -- Toggle relative line numbers
 keymap("n", "<leader>tr", function()
 	vim.opt.relativenumber = not vim.opt.relativenumber:get()
-end, { desc = "󰎡 Toggle relative", noremap = true, silent = true })
+end, { desc = "󰦨 Relative line numbers", noremap = true, silent = true })
 
 -- Telescope (fuzzy finder)
 keymap("n", "<leader>ff", function()

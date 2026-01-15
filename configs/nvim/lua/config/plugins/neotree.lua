@@ -15,7 +15,7 @@ require("neo-tree").setup({
     width = 30,
   },
   filesystem = {
-    filtered_items = {
+    auto_open = false,
       visible = false,
       hide_dotfiles = false,
       hide_gitignored = true,

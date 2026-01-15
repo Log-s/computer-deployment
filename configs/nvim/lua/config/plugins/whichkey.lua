@@ -46,9 +46,7 @@ wk.setup({
 -- Register keymaps with group labels (icons included in group names for consistency)
 wk.add({
   { "<leader>n", group = "󰉋 Neotree" },
-  { "<leader>t", group = "󰦨 Line numbers" },
-  { "<leader>tn", group = "Toggle line numbers" },
-  { "<leader>tr", group = "Toggle relative line numbers" },
+  { "<leader>t", group = "󰦨 Toogle" },
   { "<leader>f", group = "󰈞 Find" },
   { "<leader>ff", group = "󰈔 Files" },
   { "<leader>fg", group = "󰍉 Grep" },
