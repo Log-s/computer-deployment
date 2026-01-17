@@ -122,7 +122,7 @@ require("lazy").setup({
 		dependencies = { "mason.nvim" },
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "pyright" },
+				ensure_installed = { "pyright", "tsserver", "rust_analyzer" },
 			})
 		end,
 	},
@@ -132,8 +132,14 @@ require("lazy").setup({
 		config = function()
 			require("mason-tool-installer").setup({
 				ensure_installed = {
+					-- Python
 					"black",
 					"ruff",
+					-- JavaScript/TypeScript
+					"eslint_d",
+					"prettier",
+					-- Rust
+					"rustfmt",
 				},
 			})
 		end,

@@ -3,6 +3,11 @@ local lint = require("lint")
 
 lint.linters_by_ft = {
   python = { "ruff" },
+  javascript = { "eslint_d" },
+  javascriptreact = { "eslint_d" },
+  typescript = { "eslint_d" },
+  typescriptreact = { "eslint_d" },
+  -- Rust linting is handled by rust-analyzer LSP (configured with clippy)
 }
 
 -- Auto-run linters

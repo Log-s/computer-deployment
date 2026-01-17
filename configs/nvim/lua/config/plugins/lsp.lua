@@ -16,6 +16,49 @@ vim.lsp.config("pyright", {
 })
 vim.lsp.enable("pyright")
 
+-- TypeScript/JavaScript LSP (tsserver)
+vim.lsp.config("tsserver", {
+  capabilities = capabilities,
+  settings = {
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      },
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      },
+    },
+  },
+})
+vim.lsp.enable("tsserver")
+
+-- Rust LSP (rust-analyzer)
+vim.lsp.config("rust_analyzer", {
+  capabilities = capabilities,
+  settings = {
+    ["rust-analyzer"] = {
+      checkOnSave = {
+        command = "clippy",
+      },
+    },
+  },
+})
+vim.lsp.enable("rust_analyzer")
+
 -- LSP keymaps are defined in lua/config/keymaps.lua
 
 -- Show diagnostics in a floating window
