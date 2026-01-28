@@ -46,6 +46,18 @@ vim.lsp.config("tsserver", {
 })
 vim.lsp.enable("tsserver")
 
+-- Vue LSP (Volar)
+vim.lsp.config("volar", {
+  capabilities = capabilities,
+  filetypes = { "vue" },
+  init_options = {
+    vue = {
+      hybridMode = false,
+    },
+  },
+})
+vim.lsp.enable("volar")
+
 -- Rust LSP (rust-analyzer)
 vim.lsp.config("rust_analyzer", {
   capabilities = capabilities,
