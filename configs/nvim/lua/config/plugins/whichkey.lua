@@ -56,6 +56,8 @@ wk.add({
   { "<leader>cf", group = "󰨷 Format" },
   { "<leader>ca", group = "󰨷 Code action" },
   { "<leader>cr", group = "󰛷 Rename symbol" },
+  { "<leader>cn", desc = "→ Next diagnostic" },
+  { "<leader>cp", desc = "← Prev diagnostic" },
   { "<leader>D", group = "󰆍 Type definition" },
   { "<leader>w", group = "󰖲 Windows" },
   { "<leader>wa", group = "󰐗 Add workspace folder" },

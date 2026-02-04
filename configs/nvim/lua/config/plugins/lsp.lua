@@ -16,8 +16,8 @@ vim.lsp.config("pyright", {
 })
 vim.lsp.enable("pyright")
 
--- TypeScript/JavaScript LSP (tsserver)
-vim.lsp.config("tsserver", {
+-- TypeScript/JavaScript LSP
+vim.lsp.config("ts_ls", {
   capabilities = capabilities,
   settings = {
     typescript = {
@@ -44,7 +44,7 @@ vim.lsp.config("tsserver", {
     },
   },
 })
-vim.lsp.enable("tsserver")
+vim.lsp.enable("ts_ls")
 
 -- Vue LSP (Volar)
 vim.lsp.config("volar", {

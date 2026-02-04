@@ -29,8 +29,8 @@ keymap("n", "<C-k>", "<C-w>k", { desc = "󰁝 Up", noremap = true, silent = true
 keymap("n", "<C-l>", "<C-w>l", { desc = "󰁔 Right", noremap = true, silent = true })
 
 -- Diagnostic navigation
-keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "󰒕 Prev diagnostic", noremap = true, silent = true })
-keymap("n", "]d", vim.diagnostic.goto_next, { desc = "󰒔 Next diagnostic", noremap = true, silent = true })
+keymap("n", "<leader>cp", vim.diagnostic.goto_prev, { desc = "󰒕 Prev diagnostic", noremap = true, silent = true })
+keymap("n", "<leader>cn", vim.diagnostic.goto_next, { desc = "󰒔 Next diagnostic", noremap = true, silent = true })
 
 -- Toggle diagnostic display
 keymap("n", "<leader>tv", function()
