@@ -29,6 +29,10 @@ base_apt_packages:
   - net-tools
   - docker.io
   - podman
+  - podman-compose
+  - jq
+  - file
+  - xxd
   - kitty
   - sqlmap
   - netcat-traditional

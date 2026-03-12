@@ -1,6 +1,20 @@
 ---
 # Configure Docker and Podman for the user
 
+- name: Ensure /etc/containers/registries.conf.d exists for podman
+  file:
+    path: /etc/containers/registries.conf.d
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Deploy podman registries drop-in (docker.io unqualified search)
+  copy:
+    src: "{{ configs_dir }}/containers/registries.conf.d/99-docker-unqualified.conf"
+    dest: /etc/containers/registries.conf.d/99-docker-unqualified.conf
+    mode: '0644'
+  become: yes
+
 - name: Ensure docker group exists
   group:
     name: docker
