@@ -186,6 +186,18 @@ require("lazy").setup({
 		end,
 	},
 
+	-- Git diff view (single tabpage for all modified files, file history, merge tool)
+	{
+		"sindrets/diffview.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("config.plugins.diffview")
+		end,
+	},
+
 	-- Floating command window with autosuggestions
 	{
 		"folke/noice.nvim",

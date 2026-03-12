@@ -121,6 +121,35 @@ keymap("n", "<leader>cf", function()
 	require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "󰉼 Format", noremap = true, silent = true })
 
+-- Git / Diffview (open, close, file history, panel)
+keymap("n", "<leader>gd", function()
+	vim.cmd("DiffviewOpen")
+end, { desc = "󰊢 Open diff (all changes)", noremap = true, silent = true })
+
+keymap("n", "<leader>gc", function()
+	vim.cmd("DiffviewClose")
+end, { desc = "󰊢 Close diffview", noremap = true, silent = true })
+
+keymap("n", "<leader>gh", function()
+	vim.cmd("DiffviewFileHistory %")
+end, { desc = "󰊢 File history (current file)", noremap = true, silent = true })
+
+keymap("n", "<leader>gH", function()
+	vim.cmd("DiffviewFileHistory")
+end, { desc = "󰊢 File history (cwd)", noremap = true, silent = true })
+
+keymap("n", "<leader>gt", function()
+	vim.cmd("DiffviewToggleFiles")
+end, { desc = "󰊢 Toggle file panel", noremap = true, silent = true })
+
+keymap("n", "<leader>gf", function()
+	vim.cmd("DiffviewFocusFiles")
+end, { desc = "󰊢 Focus file panel", noremap = true, silent = true })
+
+keymap("n", "<leader>gr", function()
+	vim.cmd("DiffviewRefresh")
+end, { desc = "󰊢 Refresh diffview", noremap = true, silent = true })
+
 -- LSP keymaps (set when LSP attaches to a buffer)
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),

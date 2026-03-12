@@ -66,4 +66,13 @@ wk.add({
   { "<leader>wv", group = "󰁌 Split vertically" },
   { "<leader>ws", group = "󰁍 Split horizontally" },
   { "<leader>wc", group = "󰅖 Close window" },
+  -- Git (Diffview)
+  { "<leader>g", group = "󰊢 Git" },
+  { "<leader>gd", group = "󰊢 Open diff" },
+  { "<leader>gc", group = "󰊢 Close diffview" },
+  { "<leader>gh", group = "󰊢 File history (current)" },
+  { "<leader>gH", group = "󰊢 File history (cwd)" },
+  { "<leader>gt", group = "󰊢 Toggle file panel" },
+  { "<leader>gf", group = "󰊢 Focus file panel" },
+  { "<leader>gr", group = "󰊢 Refresh diffview" },
 })
