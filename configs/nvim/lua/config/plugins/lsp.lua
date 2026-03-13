@@ -3,6 +3,31 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
+-- Resolve path to absolute so Ruff never receives "file://./" (which it cannot convert).
+-- root_dir can be called with a path string or a buffer number (e.g. from Neo-tree).
+local function absolute_root(path)
+	if type(path) == "number" then
+		path = vim.api.nvim_buf_get_name(path)
+	end
+	if type(path) ~= "string" or path == "" or path == "." then
+		return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.getcwd(), ":p"))
+	end
+	local search_path = path
+	local found = vim.fs.find({ "pyproject.toml", "ruff.toml", ".ruff.toml" }, { path = search_path, upward = true })[1]
+	local root = found and vim.fs.dirname(found) or vim.fs.dirname(path) or vim.fn.getcwd()
+	if root == "" or root == "." then
+		root = vim.fn.getcwd()
+	end
+	return vim.fs.normalize(vim.fn.fnamemodify(root, ":p"))
+end
+
+-- Ruff LSP (lint/format) - use absolute root_dir to avoid "Failed to convert workspace URL: file://./"
+vim.lsp.config("ruff", {
+	capabilities = capabilities,
+	root_dir = absolute_root,
+})
+vim.lsp.enable("ruff")
+
 -- Python LSP (Pyright) - using new vim.lsp.config API (Neovim 0.11+)
 vim.lsp.config("pyright", {
   capabilities = capabilities,
