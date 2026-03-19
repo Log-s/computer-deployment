@@ -22,6 +22,9 @@ keymap("v", "<Right>", ":<C-u>echoe 'Get off my lawn!'<CR>")
 -- Exit insert mode
 keymap("i", "jj", "<Esc>", { noremap = false })
 
+-- x deletes without yanking; d yanks as usual
+keymap({ "n", "v" }, "x", '"_x', { noremap = true, silent = true })
+
 -- Window navigation
 keymap("n", "<C-h>", "<C-w>h", { desc = "󰁍 Left", noremap = true, silent = true })
 keymap("n", "<C-j>", "<C-w>j", { desc = "󰁅 Down", noremap = true, silent = true })
